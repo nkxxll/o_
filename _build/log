@@ -1,0 +1,5 @@
+# dune init project o_htmx_caml
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Workspace root: /home/nkirschall/projects/ocaml/o_htmx_caml
+# Auto-detected concurrency: 8
