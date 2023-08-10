@@ -1,1 +1,3 @@
-let () = print_endline "Hello, World!"
+let () = 
+  Args.get_args;
+  print_endline ("This is the port " ^ !Args.port)

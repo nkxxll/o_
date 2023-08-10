@@ -1,4 +1,4 @@
 (executable
  (public_name o_htmx_caml)
  (name main)
- (libraries o_htmx_caml))
+ (libraries o_htmx_caml base stdio))
