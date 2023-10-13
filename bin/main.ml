@@ -1,6 +1,7 @@
 open! Base
 
 let count : int ref = ref 0
+
 let _hello name =
   "<html>\n\t<body>\n\t<h1>Hello " ^ name ^ "</h1>\n\r\t</body>\n\r</html>"
 ;;
@@ -24,24 +25,19 @@ let form =
    </form>"
 ;;
 
-let counter = 
+let counter c =
   "<head>\n\
    <script src=\"https://unpkg.com/htmx.org@1.9.4\" \
    integrity=\"sha384-zUfuhFKKZCbHTY6aRR46gxiqszMk5tcHjsVFxnUo8VMus4kHGVdIYVbOYYNlKmHV\" \
    crossorigin=\"anonymous\"></script>\n\
   \  </head>\n\
-  <body>\
-  <button hx-get=\"/up\" hx-target=\"clostest .counter\" hx-swap=\"innerHtml\" hx-trigger=\"click\"> \
-  more \
-  </button> \
-  <label class=\"counter\"> \
-  0
-  </label> \
-  <button hx-get=\"/down\" hx-target=\"clostest .counter\" hx-swap=\"innerHtml\" hx-trigger=\"click\"> \
-  less \
-  </button> \
-  </body> \
-  "
+   <body><button hx-get=\"/up\" hx-target=\"#counter\" hx-swap=\"innerHtml\" \
+   hx-trigger=\"click\"> more </button> <label class=\"counter\" id=\"counter\"> "
+  ^ Int.to_string c
+  ^ "\n\
+    \  </label> <button hx-get=\"/down\" hx-target=\"#counter\" hx-swap=\"innerHtml\" \
+     hx-trigger=\"click\"> less </button> </body> "
+;;
 
 let tyxml_respond _ =
   let open Tyxml.Html in
@@ -57,13 +53,15 @@ let () =
   @@ Dream.router
        [ Dream.get "/" (fun _ -> Dream.html form)
        ; Dream.get "/tyxml" tyxml_respond
-       ; Dream.get "/counter" (fun _ -> Dream.html counter)
-       ; Dream.get "/up" (fun _ -> 
-        count := !count + 1;
-        Dream.html (Int.to_string !count))
-       ; Dream.get"/down" (fun _ -> 
-        count := !count - 1;
-        Dream.html (Int.to_string !count))
+       ; Dream.get "/counter" (fun _ ->
+           let c = !count in
+           Dream.html (counter c))
+       ; Dream.get "/up" (fun _ ->
+           count := !count + 1;
+           Dream.html (Int.to_string !count))
+       ; Dream.get "/down" (fun _ ->
+           count := !count - 1;
+           Dream.html (Int.to_string !count))
        ; Dream.post "/echo" (fun request ->
            let open Lwt.Syntax in
            (* getting the body with lwt async lib
